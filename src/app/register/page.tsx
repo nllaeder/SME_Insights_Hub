@@ -26,13 +26,12 @@ function Logo() {
   );
 }
 
-
-export default function LoginPage() {
+export default function RegisterPage() {
   const router = useRouter();
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleRegister = (e: React.FormEvent) => {
     e.preventDefault();
-    router.push("/dashboard");
+    router.push("/dashboard/connect"); // Redirect to connect page for onboarding
   };
 
   return (
@@ -41,12 +40,16 @@ export default function LoginPage() {
         <CardHeader className="space-y-1 text-center">
           <div className="flex items-center justify-center">
             <Logo />
-            <CardTitle className="text-3xl font-bold">SME Insights Hub</CardTitle>
+            <CardTitle className="text-3xl font-bold">Create an Account</CardTitle>
           </div>
-          <CardDescription>Enter your credentials to access your dashboard</CardDescription>
+          <CardDescription>Join the SME Insights Hub today</CardDescription>
         </CardHeader>
-        <form onSubmit={handleLogin}>
+        <form onSubmit={handleRegister}>
           <CardContent className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="name">Name</Label>
+              <Input id="name" type="text" placeholder="Your Name" required />
+            </div>
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
               <Input id="email" type="email" placeholder="m@example.com" required />
@@ -56,31 +59,15 @@ export default function LoginPage() {
               <Input id="password" type="password" required />
             </div>
             <Button type="submit" className="w-full">
-              Sign In
+              Sign Up
             </Button>
           </CardContent>
         </form>
-        <div className="relative mb-4">
-          <div className="absolute inset-0 flex items-center">
-            <span className="w-full border-t" />
-          </div>
-          <div className="relative flex justify-center text-xs uppercase">
-            <span className="bg-card px-2 text-muted-foreground">
-              Or continue with
-            </span>
-          </div>
-        </div>
         <CardFooter className="flex flex-col gap-4">
-          <Button variant="outline" className="w-full" onClick={handleLogin}>
-            Sign in with Google
-          </Button>
-          <Button variant="outline" className="w-full" onClick={handleLogin}>
-            Sign in with Microsoft
-          </Button>
           <div className="mt-4 text-center text-sm">
-            Don&apos;t have an account?{" "}
-            <Link href="/register" className="underline text-primary">
-              Sign up
+            Already have an account?{" "}
+            <Link href="/" className="underline text-primary">
+              Sign in
             </Link>
           </div>
         </CardFooter>
