@@ -17,6 +17,7 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { UserNav } from "@/components/user-nav"
+import { ModeToggle } from "@/components/mode-toggle"
 
 function Logo() {
   return (
@@ -111,6 +112,7 @@ export default function DashboardLayout({
           <div className="flex-1">
             {/* Can add page title here later */}
           </div>
+          <ModeToggle />
           <UserNav />
         </header>
         <main className="flex-1 overflow-auto p-4 sm:p-6">{children}</main>
