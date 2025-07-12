@@ -3,7 +3,7 @@ import { DataSourceCard, type DataSource } from "@/components/data-source-card"
 import { RequestSourceDialog } from "@/components/request-source-dialog"
 
 const dataSources: DataSource[] = [
-  { name: "Mailchimp", category: "Marketing", connected: true },
+  { name: "Mailchimp", category: "Marketing" },
   { name: "Constant Contact", category: "Marketing" },
   { name: "QuickBooks", category: "Finance", connected: true },
   { name: "Asana", category: "Project Management" },
