@@ -21,12 +21,18 @@ export function DataSourceCard({ source }: DataSourceCardProps) {
   const [isConnected, setIsConnected] = useState(source.connected ?? false)
 
   const handleConnect = () => {
-    setIsConnecting(true)
-    // Simulate OAuth flow
-    setTimeout(() => {
-      setIsConnecting(false)
-      setIsConnected(true)
-    }, 1500)
+    setIsConnecting(true);
+
+    if (source.name === "Mailchimp") {
+      // Redirect to the auth endpoint
+      window.location.href = '/api/auth/mailchimp/connect';
+    } else {
+      // Simulate OAuth flow for other sources for now
+      setTimeout(() => {
+        setIsConnecting(false)
+        setIsConnected(true)
+      }, 1500)
+    }
   }
 
   return (
