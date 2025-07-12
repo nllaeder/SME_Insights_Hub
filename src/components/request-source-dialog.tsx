@@ -45,12 +45,24 @@ export function RequestSourceDialog() {
           <div className="grid gap-4 py-4">
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="source-name" className="text-right">
-                Platform
+                Name
               </Label>
               <Input
                 id="source-name"
                 placeholder="e.g., Salesforce"
                 className="col-span-3"
+                required
+              />
+            </div>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="source-homepage" className="text-right">
+                Homepage
+              </Label>
+              <Input
+                id="source-homepage"
+                placeholder="e.g., https://salesforce.com"
+                className="col-span-3"
+                type="url"
                 required
               />
             </div>
