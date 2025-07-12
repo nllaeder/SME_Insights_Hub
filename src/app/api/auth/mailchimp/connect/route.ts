@@ -1,9 +1,10 @@
 import { redirect } from 'next/navigation';
 import { type NextRequest } from 'next/server';
+import { getSecret } from '@/lib/secrets';
 
 export async function GET(req: NextRequest) {
-  const clientId = process.env.MAILCHIMP_CLIENT_ID;
-  const redirectUri = `${process.env.NEXT_PUBLIC_APP_URL}/api/auth/mailchimp/callback`;
+  const clientId = await getSecret('MAILCHIMP_CLIENT_ID');
+  const redirectUri = `${await getSecret('NEXT_PUBLIC_APP_URL')}/api/auth/mailchimp/callback`;
 
   if (!clientId || !redirectUri) {
     throw new Error('Mailchimp client ID or redirect URI is not configured.');

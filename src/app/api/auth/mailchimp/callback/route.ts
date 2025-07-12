@@ -1,13 +1,6 @@
 import { redirect } from 'next/navigation';
 import { type NextRequest } from 'next/server';
-
-// This is a placeholder for secure token storage.
-// In a real application, this would use a secure database or a secret manager.
-async function storeToken(userId: string, service: string, token: any) {
-  console.log(`Storing token for user ${userId}, service ${service}:`, token);
-  // In a real app, you would securely store the token for the user.
-  // For this prototype, we'll just log it.
-}
+import { getSecret, storeSecret } from '@/lib/secrets';
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
@@ -18,9 +11,9 @@ export async function GET(req: NextRequest) {
     return new Response('Authorization failed or was denied.', { status: 400 });
   }
 
-  const clientId = process.env.MAILCHIMP_CLIENT_ID;
-  const clientSecret = process.env.MAILCHIMP_CLIENT_SECRET;
-  const redirectUri = `${process.env.NEXT_PUBLIC_APP_URL}/api/auth/mailchimp/callback`;
+  const clientId = await getSecret('MAILCHIMP_CLIENT_ID');
+  const clientSecret = await getSecret('MAILCHIMP_CLIENT_SECRET');
+  const redirectUri = `${await getSecret('NEXT_PUBLIC_APP_URL')}/api/auth/mailchimp/callback`;
   
   if (!clientId || !clientSecret || !redirectUri) {
     throw new Error('Mailchimp client ID, secret, or redirect URI is not configured.');
@@ -68,11 +61,14 @@ export async function GET(req: NextRequest) {
   
   // Store the token and metadata securely
   // Using a placeholder user ID "user-123" for this prototype
-  await storeToken('user-123', 'mailchimp', {
+  const tokenStorageKey = 'user-123-mailchimp-token';
+  const tokenDataToStore = JSON.stringify({
       accessToken: accessToken,
       apiEndpoint: apiEndpoint,
       dc: metadata.dc,
   });
+
+  await storeSecret(tokenStorageKey, tokenDataToStore);
 
   // Redirect user to the dashboard connect page
   redirect('/dashboard/connect?status=success&source=mailchimp');
