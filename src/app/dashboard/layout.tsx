@@ -61,26 +61,28 @@ export default function DashboardLayout({
         <SidebarContent>
           <SidebarMenu>
             <SidebarMenuItem>
-              <Link href="/dashboard" legacyBehavior passHref>
-                <SidebarMenuButton
-                  isActive={pathname === "/dashboard"}
-                  tooltip={{ children: "Dashboard" }}
-                >
+              <SidebarMenuButton
+                asChild
+                isActive={pathname === "/dashboard"}
+                tooltip={{ children: "Dashboard" }}
+              >
+                <Link href="/dashboard">
                   <LayoutDashboard />
                   <span>Dashboard</span>
-                </SidebarMenuButton>
-              </Link>
+                </Link>
+              </SidebarMenuButton>
             </SidebarMenuItem>
             <SidebarMenuItem>
-              <Link href="/dashboard/connect" legacyBehavior passHref>
-                <SidebarMenuButton
-                  isActive={pathname === "/dashboard/connect"}
-                  tooltip={{ children: "Connect Sources" }}
-                >
+              <SidebarMenuButton
+                asChild
+                isActive={pathname === "/dashboard/connect"}
+                tooltip={{ children: "Connect Sources" }}
+              >
+                <Link href="/dashboard/connect">
                   <PlusCircle />
                   <span>Connect Sources</span>
-                </SidebarMenuButton>
-              </Link>
+                </Link>
+              </SidebarMenuButton>
             </SidebarMenuItem>
           </SidebarMenu>
         </SidebarContent>
@@ -93,12 +95,12 @@ export default function DashboardLayout({
               </SidebarMenuButton>
             </SidebarMenuItem>
             <SidebarMenuItem>
-                <Link href="/" legacyBehavior passHref>
-                    <SidebarMenuButton tooltip={{ children: "Log Out" }}>
-                        <LogOut />
-                        <span>Log Out</span>
-                    </SidebarMenuButton>
+              <SidebarMenuButton asChild tooltip={{ children: "Log Out" }}>
+                <Link href="/">
+                    <LogOut />
+                    <span>Log Out</span>
                 </Link>
+              </SidebarMenuButton>
             </SidebarMenuItem>
           </SidebarMenu>
         </SidebarFooter>
