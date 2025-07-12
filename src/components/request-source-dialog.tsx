@@ -15,6 +15,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useToast } from "@/hooks/use-toast"
 import React from "react"
+import { Textarea } from "./ui/textarea"
 
 export function RequestSourceDialog() {
   const { toast } = useToast()
@@ -64,6 +65,16 @@ export function RequestSourceDialog() {
                 className="col-span-3"
                 type="url"
                 required
+              />
+            </div>
+            <div className="grid grid-cols-4 items-start gap-4">
+              <Label htmlFor="source-notes" className="text-right pt-2">
+                Notes
+              </Label>
+              <Textarea
+                id="source-notes"
+                placeholder="e.g., I need access to the Leads and Opportunities objects."
+                className="col-span-3"
               />
             </div>
           </div>
