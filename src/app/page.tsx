@@ -6,6 +6,11 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import React, { useState } from "react";
+import { useAuth } from "@/contexts/auth-context";
+import { useToast } from "@/hooks/use-toast";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { AlertCircle } from "lucide-react";
 
 function Logo() {
   return (
@@ -26,13 +31,40 @@ function Logo() {
   );
 }
 
-
 export default function LoginPage() {
   const router = useRouter();
+  const { signInWithEmail, signInWithGoogle } = useAuth();
+  const { toast } = useToast();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    router.push("/dashboard");
+    setError(null);
+    setIsLoading(true);
+    try {
+      await signInWithEmail(email, password);
+      router.push("/dashboard");
+    } catch (err: any) {
+      setError(err.message || "An unexpected error occurred.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleGoogleLogin = async () => {
+    setError(null);
+    setIsLoading(true);
+    try {
+      await signInWithGoogle();
+      router.push("/dashboard");
+    } catch (err: any) {
+      setError(err.message || "Failed to sign in with Google.");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -47,16 +79,23 @@ export default function LoginPage() {
         </CardHeader>
         <form onSubmit={handleLogin}>
           <CardContent className="space-y-4">
+            {error && (
+              <Alert variant="destructive">
+                <AlertCircle className="h-4 w-4" />
+                <AlertTitle>Login Failed</AlertTitle>
+                <AlertDescription>{error}</AlertDescription>
+              </Alert>
+            )}
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
-              <Input id="email" type="email" placeholder="m@example.com" required />
+              <Input id="email" type="email" placeholder="m@example.com" required value={email} onChange={(e) => setEmail(e.target.value)} disabled={isLoading} />
             </div>
             <div className="space-y-2">
               <Label htmlFor="password">Password</Label>
-              <Input id="password" type="password" required />
+              <Input id="password" type="password" required value={password} onChange={(e) => setPassword(e.target.value)} disabled={isLoading} />
             </div>
-            <Button type="submit" className="w-full">
-              Sign In
+            <Button type="submit" className="w-full" disabled={isLoading}>
+              {isLoading ? "Signing In..." : "Sign In"}
             </Button>
           </CardContent>
         </form>
@@ -71,11 +110,8 @@ export default function LoginPage() {
           </div>
         </div>
         <CardFooter className="flex flex-col gap-4">
-          <Button variant="outline" className="w-full" onClick={handleLogin}>
+          <Button variant="outline" className="w-full" onClick={handleGoogleLogin} disabled={isLoading}>
             Sign in with Google
-          </Button>
-          <Button variant="outline" className="w-full" onClick={handleLogin}>
-            Sign in with Microsoft
           </Button>
           <div className="mt-4 text-center text-sm">
             Don&apos;t have an account?{" "}

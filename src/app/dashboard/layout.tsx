@@ -14,10 +14,13 @@ import {
 } from "@/components/ui/sidebar"
 import { BarChart2, PlusCircle, LayoutDashboard, LogOut, Settings } from "lucide-react"
 import Link from "next/link"
-import { usePathname } from "next/navigation"
+import { usePathname, useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { UserNav } from "@/components/user-nav"
 import { ModeToggle } from "@/components/mode-toggle"
+import { useAuth } from "@/contexts/auth-context"
+import React, { useEffect } from "react"
+import { Skeleton } from "@/components/ui/skeleton"
 
 function Logo() {
   return (
@@ -41,12 +44,64 @@ function Logo() {
   )
 }
 
+function DashboardSkeleton() {
+  return (
+    <div className="flex h-full w-full">
+      {/* Sidebar Skeleton */}
+      <div className="hidden md:flex flex-col gap-4 border-r bg-card p-4 w-64">
+        <div className="flex items-center gap-2">
+          <Skeleton className="h-8 w-8" />
+          <Skeleton className="h-6 w-32" />
+        </div>
+        <div className="flex flex-col gap-2 mt-4">
+          <Skeleton className="h-10 w-full" />
+          <Skeleton className="h-10 w-full" />
+        </div>
+        <div className="mt-auto flex flex-col gap-2">
+          <Skeleton className="h-10 w-full" />
+          <Skeleton className="h-10 w-full" />
+        </div>
+      </div>
+      {/* Main Content Skeleton */}
+      <div className="flex-1">
+        <header className="sticky top-0 z-10 flex h-14 items-center gap-4 border-b bg-card px-4 sm:h-16 sm:px-6">
+          <div className="flex-1" />
+          <Skeleton className="h-8 w-8 rounded-full" />
+          <Skeleton className="h-8 w-8 rounded-full" />
+        </header>
+        <main className="p-4 sm:p-6">
+          <Skeleton className="h-8 w-48 mb-4" />
+          <Skeleton className="h-4 w-64 mb-6" />
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
+            <Skeleton className="h-28 w-full" />
+            <Skeleton className="h-28 w-full" />
+            <Skeleton className="h-28 w-full" />
+            <Skeleton className="h-28 w-full" />
+          </div>
+        </main>
+      </div>
+    </div>
+  );
+}
+
 export default function DashboardLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
   const pathname = usePathname()
+  const { user, loading } = useAuth();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!loading && !user) {
+      router.push('/');
+    }
+  }, [user, loading, router]);
+
+  if (loading || !user) {
+    return <DashboardSkeleton />;
+  }
 
   return (
     <SidebarProvider>
@@ -96,12 +151,7 @@ export default function DashboardLayout({
               </SidebarMenuButton>
             </SidebarMenuItem>
             <SidebarMenuItem>
-              <SidebarMenuButton asChild tooltip={{ children: "Log Out" }}>
-                <Link href="/">
-                    <LogOut />
-                    <span>Log Out</span>
-                </Link>
-              </SidebarMenuButton>
+               <UserNav />
             </SidebarMenuItem>
           </SidebarMenu>
         </SidebarFooter>

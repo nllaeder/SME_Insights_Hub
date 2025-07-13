@@ -6,31 +6,36 @@ const activities = [
     name: "Olivia Martin",
     email: "olivia.martin@email.com",
     change: "+$1,999.00",
-    avatar: "https://placehold.co/40x40.png?text=OM"
+    avatar: "https://placehold.co/40x40.png",
+    dataAiHint: "woman portrait"
   },
   {
     name: "Jackson Lee",
     email: "jackson.lee@email.com",
     change: "+$39.00",
-    avatar: "https://placehold.co/40x40.png?text=JL"
+    avatar: "https://placehold.co/40x40.png",
+    dataAiHint: "man portrait"
   },
   {
     name: "Isabella Nguyen",
     email: "isabella.nguyen@email.com",
     change: "+$299.00",
-    avatar: "https://placehold.co/40x40.png?text=IN"
+    avatar: "https://placehold.co/40x40.png",
+    dataAiHint: "woman smiling"
   },
   {
     name: "William Kim",
     email: "will@email.com",
     change: "+$99.00",
-    avatar: "https://placehold.co/40x40.png?text=WK"
+    avatar: "https://placehold.co/40x40.png",
+    dataAiHint: "man professional"
   },
   {
     name: "Sofia Davis",
     email: "sofia.davis@email.com",
     change: "+$39.00",
-    avatar: "https://placehold.co/40x40.png?text=SD"
+    avatar: "https://placehold.co/40x40.png",
+    dataAiHint: "woman face"
   },
 ]
 
@@ -46,7 +51,7 @@ export function ActivityFeed() {
           {activities.map((activity) => (
             <div key={activity.email} className="flex items-center">
               <Avatar className="h-9 w-9">
-                <AvatarImage src={activity.avatar} alt="Avatar" />
+                <AvatarImage src={activity.avatar} alt="Avatar" data-ai-hint={activity.dataAiHint} />
                 <AvatarFallback>{activity.name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
               </Avatar>
               <div className="ml-4 space-y-1">

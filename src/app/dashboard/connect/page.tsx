@@ -1,9 +1,14 @@
+"use client";
+
 import { Button } from "@/components/ui/button"
 import { DataSourceCard, type DataSource } from "@/components/data-source-card"
 import { RequestSourceDialog } from "@/components/request-source-dialog"
+import { useSearchParams } from 'next/navigation'
+import React, { useEffect } from 'react'
+import { useToast } from "@/hooks/use-toast"
 
 const dataSources: DataSource[] = [
-  { name: "Mailchimp", category: "Marketing" },
+  { name: "Mailchimp", category: "Marketing", connected: false }, // Default to not connected
   { name: "Constant Contact", category: "Marketing" },
   { name: "QuickBooks", category: "Finance", connected: true },
   { name: "Asana", category: "Project Management" },
@@ -13,6 +18,31 @@ const dataSources: DataSource[] = [
 ]
 
 export default function ConnectPage() {
+  const searchParams = useSearchParams()
+  const { toast } = useToast()
+
+  useEffect(() => {
+    const status = searchParams.get('status')
+    const source = searchParams.get('source')
+    const error = searchParams.get('error')
+
+    if (status === 'success' && source === 'mailchimp') {
+      toast({
+        title: "Mailchimp Connected!",
+        description: "Successfully integrated with your Mailchimp account.",
+      })
+      // In a real app, you'd want to update the state of the card here
+      // For this prototype, a page reload will reflect the "connected" state
+      // after you manually update `dataSources` array.
+    } else if (error) {
+      toast({
+        title: "Connection Failed",
+        description: `Could not connect to ${source || 'the service'}. Reason: ${error}`,
+        variant: "destructive",
+      })
+    }
+  }, [searchParams, toast])
+
   return (
     <div className="flex flex-col gap-6">
       <header className="flex items-center justify-between">

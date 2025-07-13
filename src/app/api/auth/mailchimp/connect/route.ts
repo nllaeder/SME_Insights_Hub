@@ -3,17 +3,20 @@ import { type NextRequest } from 'next/server';
 import { getSecret } from '@/lib/secrets';
 
 export async function GET(req: NextRequest) {
-  const clientId = await getSecret('MAILCHIMP_CLIENT_ID');
-  const redirectUri = `${await getSecret('NEXT_PUBLIC_APP_URL')}/api/auth/mailchimp/callback`;
+  try {
+    const clientId = await getSecret('MAILCHIMP_CLIENT_ID');
+    const appUrl = await getSecret('NEXT_PUBLIC_APP_URL');
+    const redirectUri = `${appUrl}/api/auth/mailchimp/callback`;
 
-  if (!clientId || !redirectUri) {
-    throw new Error('Mailchimp client ID or redirect URI is not configured.');
+    const authUrl = new URL('https://login.mailchimp.com/oauth2/authorize');
+    authUrl.searchParams.set('response_type', 'code');
+    authUrl.searchParams.set('client_id', clientId);
+    authUrl.searchParams.set('redirect_uri', redirectUri);
+
+    redirect(authUrl.toString());
+  } catch (error) {
+    console.error("Error initiating Mailchimp connection:", error);
+    // Redirect to an error page or show a message
+    redirect('/dashboard/connect?error=mailchimp_config');
   }
-
-  const authUrl = new URL('https://login.mailchimp.com/oauth2/authorize');
-  authUrl.searchParams.set('response_type', 'code');
-  authUrl.searchParams.set('client_id', clientId);
-  authUrl.searchParams.set('redirect_uri', redirectUri);
-
-  redirect(authUrl.toString());
 }
