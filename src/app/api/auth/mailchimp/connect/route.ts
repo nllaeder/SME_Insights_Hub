@@ -5,7 +5,12 @@ import { getSecret } from '@/lib/secrets';
 export async function GET(req: NextRequest) {
   try {
     const clientId = await getSecret('MAILCHIMP_CLIENT_ID');
-    const appUrl = await getSecret('NEXT_PUBLIC_APP_URL');
+    
+    // Dynamically determine the app URL from the request headers
+    const protocol = req.headers.get('x-forwarded-proto') || 'http';
+    const host = req.headers.get('host');
+    const appUrl = `${protocol}://${host}`;
+
     const redirectUri = `${appUrl}/api/auth/mailchimp/callback`;
 
     const authUrl = new URL('https://login.mailchimp.com/oauth2/authorize');
