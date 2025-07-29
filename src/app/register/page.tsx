@@ -11,25 +11,6 @@ import React, { useState } from "react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertCircle } from "lucide-react";
 
-function Logo() {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className="mr-2 h-6 w-6 text-primary"
-    >
-      <path d="M3 3v18h18" />
-      <path d="M7 12v5h10" />
-      <path d="M7 7v2h4" />
-    </svg>
-  );
-}
-
 export default function RegisterPage() {
   const router = useRouter();
   const { signUpWithEmail } = useAuth();
@@ -58,13 +39,10 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background p-4">
+    <div className="flex h-full items-center justify-center bg-background p-4">
       <Card className="w-full max-w-md shadow-2xl">
         <CardHeader className="space-y-1 text-center">
-          <div className="flex items-center justify-center">
-            <Logo />
-            <CardTitle className="text-3xl font-bold">Create an Account</CardTitle>
-          </div>
+          <CardTitle className="text-3xl font-bold">Create an Account</CardTitle>
           <CardDescription>Join the SME Insights Hub today</CardDescription>
         </CardHeader>
         <form onSubmit={handleRegister}>

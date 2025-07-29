@@ -21,6 +21,7 @@ import { ModeToggle } from "@/components/mode-toggle"
 import { useAuth } from "@/contexts/auth-context"
 import React, { useEffect } from "react"
 import { Skeleton } from "@/components/ui/skeleton"
+import { Header } from "@/components/header"
 
 function Logo() {
   return (
@@ -100,7 +101,14 @@ export default function DashboardLayout({
   }, [user, loading, router]);
 
   if (loading || !user) {
-    return <DashboardSkeleton />;
+    return (
+      <div className="h-screen w-screen flex flex-col">
+        <Header />
+        <div className="flex-1 flex items-center justify-center">
+            <DashboardSkeleton />
+        </div>
+      </div>
+    )
   }
 
   return (
@@ -157,14 +165,6 @@ export default function DashboardLayout({
         </SidebarFooter>
       </Sidebar>
       <SidebarInset>
-        <header className="sticky top-0 z-10 flex h-14 items-center gap-4 border-b bg-card px-4 sm:h-16 sm:px-6">
-          <SidebarTrigger className="md:hidden" />
-          <div className="flex-1">
-            {/* Can add page title here later */}
-          </div>
-          <ModeToggle />
-          <UserNav />
-        </header>
         <main className="flex-1 overflow-auto p-4 sm:p-6">{children}</main>
       </SidebarInset>
     </SidebarProvider>

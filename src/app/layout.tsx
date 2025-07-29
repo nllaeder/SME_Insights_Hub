@@ -3,6 +3,7 @@ import './globals.css';
 import { Toaster } from "@/components/ui/toaster"
 import { ThemeProvider } from '@/components/theme-provider';
 import { AuthProvider } from '@/contexts/auth-context';
+import { Header } from '@/components/header';
 
 export const metadata: Metadata = {
   title: 'SME Insights Hub',
@@ -29,7 +30,10 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <AuthProvider>
-            {children}
+            <div className="flex flex-col h-full">
+              <Header />
+              <main className="flex-1 overflow-y-auto">{children}</main>
+            </div>
             <Toaster />
           </AuthProvider>
         </ThemeProvider>
