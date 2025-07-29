@@ -14,12 +14,11 @@ export function Header() {
       <div className="container flex h-16 items-center">
         <Link href={user ? "/dashboard" : "/"} className="mr-auto flex items-center gap-2">
           <Image
-            src="https://placehold.co/260x130.png"
+            src="/logo.png"
             width={130}
             height={65}
             alt="Logo"
             className="h-[65px] w-auto"
-            data-ai-hint="logo"
           />
           <span className="font-bold">SME Insights Hub</span>
         </Link>
