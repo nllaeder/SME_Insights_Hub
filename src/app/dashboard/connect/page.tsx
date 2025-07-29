@@ -1,11 +1,13 @@
+
 "use client";
 
 import { Button } from "@/components/ui/button"
 import { DataSourceCard, type DataSource } from "@/components/data-source-card"
 import { RequestSourceDialog } from "@/components/request-source-dialog"
 import { useSearchParams } from 'next/navigation'
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useToast } from "@/hooks/use-toast"
+import { cn } from "@/lib/utils"
 
 const dataSources: DataSource[] = [
   { name: "Mailchimp", category: "Marketing", connected: false }, // Default to not connected
@@ -17,9 +19,12 @@ const dataSources: DataSource[] = [
   { name: "Shopify", category: "eCommerce", connected: true },
 ]
 
+const categories = ["All", ...Array.from(new Set(dataSources.map(ds => ds.category)))]
+
 export default function ConnectPage() {
   const searchParams = useSearchParams()
   const { toast } = useToast()
+  const [selectedCategory, setSelectedCategory] = useState("All")
 
   useEffect(() => {
     const status = searchParams.get('status')
@@ -43,6 +48,10 @@ export default function ConnectPage() {
     }
   }, [searchParams, toast])
 
+  const filteredDataSources = selectedCategory === "All"
+    ? dataSources
+    : dataSources.filter(source => source.category === selectedCategory)
+
   return (
     <div className="flex flex-col gap-6">
       <header className="flex items-center justify-between">
@@ -56,9 +65,22 @@ export default function ConnectPage() {
         </div>
         <RequestSourceDialog />
       </header>
+      
+      <div className="flex items-center gap-2 overflow-x-auto pb-2">
+        {categories.map(category => (
+          <Button
+            key={category}
+            variant={selectedCategory === category ? "default" : "outline"}
+            onClick={() => setSelectedCategory(category)}
+            className="shrink-0"
+          >
+            {category}
+          </Button>
+        ))}
+      </div>
 
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-        {dataSources.map((source) => (
+        {filteredDataSources.map((source) => (
           <DataSourceCard key={source.name} source={source} />
         ))}
       </div>
