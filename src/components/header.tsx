@@ -15,7 +15,7 @@ export function Header() {
       <div className="container flex h-16 items-center">
         <Link href={user ? "/dashboard" : "/"} className="mr-auto flex items-center gap-2">
           <Image
-            src={`/logo.png?t=${new Date().getTime()}`}
+            src="/logo.png"
             width={130}
             height={65}
             alt="Logo"
