@@ -8,7 +8,7 @@
  */
 
 const {setGlobalOptions} = require("firebase-functions");
-const {onRequest} = require("firebase-functions/https");
+const {onRequest} = require("firebase-functions/v2/https");
 const logger = require("firebase-functions/logger");
 // Import the necessary modules from the Firebase SDK
 const functions = require("firebase-functions");
@@ -44,21 +44,6 @@ exports.onUserCreate = functions.auth.user().onCreate(async (user) => {
     functions.logger.error(`Error creating Firestore doc for user: ${user.uid}`, error);
     // Exit the function if we can't create the user document
     return;
-  }
-
-  // --- Step 2: Create a new BigQuery Dataset for the user ---
-  // We use a unique, predictable name for the dataset, e.g., "user_aBcDeF12345"
-  const datasetId = `user_${user.uid.replace(/-/g, "_")}`;
-
-  try {
-    await bigquery.createDataset(datasetId, {
-        location: "US", // Or your preferred location
-        description: `Dataset for user ${user.uid}`,
-    });
-    functions.logger.log(`Successfully created BigQuery dataset: ${datasetId}`);
-  } catch (error) {
-    functions.logger.error(`Error creating BigQuery dataset for ${user.uid}:`, error);
-    // You might want to add cleanup logic here, e.g., delete the Firestore user doc
   }
 });
 // For cost control, you can set the maximum number of containers that can be

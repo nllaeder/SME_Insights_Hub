@@ -12,7 +12,7 @@ import {
   type User 
 } from 'firebase/auth';
 import { auth, db } from '@/lib/firebase';
-import { doc, setDoc, getDoc } from "firebase/firestore";
+import { doc, getDoc } from "firebase/firestore";
 import { useRouter } from 'next/navigation';
 
 interface AuthContextType {
@@ -25,30 +25,6 @@ interface AuthContextType {
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
-
-async function createUserDocument(user: User, additionalData: { displayName: string }) {
-    if (!user) return;
-  
-    const userRef = doc(db, `users/${user.uid}`);
-    const snapshot = await getDoc(userRef);
-  
-    if (!snapshot.exists()) {
-      const { email, uid } = user;
-      const { displayName } = additionalData;
-      const createdAt = new Date();
-  
-      try {
-        await setDoc(userRef, {
-          uid,
-          displayName,
-          email,
-          createdAt,
-        });
-      } catch (error) {
-        console.error("Error creating user document", error);
-      }
-    }
-}
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
@@ -71,9 +47,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     // Update Firebase Auth profile
     await updateProfile(firebaseUser, { displayName: name });
     
-    // Create user document in Firestore
-    await createUserDocument(firebaseUser, { displayName: name });
-
     // Refresh user state to get updated profile
     setUser({ ...firebaseUser, displayName: name });
     return userCredential;
@@ -85,12 +58,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const signInWithGoogle = async () => {
     const provider = new GoogleAuthProvider();
-    const userCredential = await signInWithPopup(auth, provider);
-    
-    // Create user document if they are a new user
-    await createUserDocument(userCredential.user, { displayName: userCredential.user.displayName || 'Google User' });
-    
-    return userCredential;
+    return signInWithPopup(auth, provider);
   };
 
   const signOut = async () => {
